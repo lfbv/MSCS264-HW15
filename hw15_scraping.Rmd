@@ -36,6 +36,12 @@ Further hints:
 - str_replace or str_remove can be helpful in removing footnotes [.]
 
 
+Hello! I'm making a change!
+```{r}
+2 + 2
+```
+
+
 2. Following the examples from class, use the `rvest` package to pull off data from the link  [here](https://www.imdb.com/search/title?year=2018-01-01,2018-12-31&sort=boxoffice_gross_us,desc) with the top 50 grossing films from 2018. Generate a tibble that contains the title, gross, star rating (imdbscore), and metascore for the top 50 films. Then create a scatterplot of star rating versus Gross.  A couple of hints:
 
 - use SelectorGadget
