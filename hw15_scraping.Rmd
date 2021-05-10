@@ -1,10 +1,10 @@
 ---
 title: 'MSCS 264: Homework #15'
 output:
+  html_document: default
   pdf_document:
     fig_height: 3
     fig_width: 4.5
-  html_document: default
   word_document: default
 editor_options: 
   chunk_output_type: console
@@ -52,3 +52,73 @@ Now I'm making a change from GitHub!!!
 3. Identify which films of the top 50 from 2018 had the biggest discrepancy between reviewers (metascore) and viewers (star rating).
 
 4. 5 points if you push your Rmd file with HW15 solutions along with the knitted pdf file to your MSCS264-HW15 repository in your GitHub account.  So that I can check, make your repository private (good practice when doing HW), but add me (username = lfbv) as a collaborator under Settings > Collaborators.
+
+
+## Map example
+
+```{r}
+vaccine_data <- read_csv("Data/exam1data.csv") 
+
+vacc_mar13 <- vaccine_data %>%
+  filter(Date =="2021-03-13") %>%
+  select(State, Date, people_vaccinated_per100, share_doses_used, Governor) %>%
+  mutate(State = str_replace(State, " State", ""),
+         State = str_to_lower(State))
+
+
+library(viridis) # for color schemes
+
+library(maps)
+map_data("state") %>%
+  left_join(vacc_mar13, by =c("region" = "State")) %>%
+  ggplot(mapping = aes(x = long, y = lat,
+                          group = group)) + 
+  geom_polygon(aes(fill = people_vaccinated_per100), color = "black") + 
+  labs(fill = "People Vacc.\nper 100 pop.") +
+  coord_map() + # This scales the longitude and latitude so that the shapes look correct.
+  theme_void() + # This theme can give you a really clean look! 
+  scale_fill_viridis() + # you can change the fill scale for different color schemes.
+  labs(title = "Cumulative People Vaccinated per 100 population\nMarch 13, 2021")
+```
+
+```{r}
+library(plotly)
+(vaccine_data %>% 
+  group_by(Region, Date) %>%
+  summarize(people_vacc_total = sum(people_vaccinated_per100)) %>%
+  ggplot(mapping = aes(x = Date, y = people_vacc_total, color = Region)) + 
+  geom_point() +
+    geom_line()+
+    labs(title = "Cumulative People Vaccinated per 100 population", 
+         y = "People/100 Population", 
+         x = "Date")) %>%
+  ggplotly()
+```
+
+
+```{r}
+library(leaflet)
+airbnb.df <- read_csv("Data/airbnbData_full.csv")
+Encoding( x = airbnb.df$AboutListing ) <- "UTF-8"
+airbnb.df$AboutListing <-
+  iconv( x = airbnb.df$AboutListing
+         , from = "UTF-8"
+         , to = "UTF-8"
+         , sub = "" )
+
+# This part makes the map!
+leaflet() %>%
+    addTiles() %>% 
+    setView(lng = mean(airbnb.df$Long), lat = mean(airbnb.df$Lat), 
+            zoom = 13) %>% 
+    addCircleMarkers(data = airbnb.df,
+        lat = ~ Lat, 
+        lng = ~ Long, 
+        popup = ~ AboutListing, 
+        radius = ~ S_Accomodates,  # These last options describe how the circles look
+        weight = 2,
+        color = "red", 
+        fillColor = "yellow")
+```
+
+
