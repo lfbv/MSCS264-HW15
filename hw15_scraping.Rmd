@@ -1,10 +1,10 @@
 ---
 title: 'MSCS 264: Homework #15'
 output:
-  html_document: default
   pdf_document:
     fig_height: 3
     fig_width: 4.5
+  html_document: default
   word_document: default
 editor_options: 
   chunk_output_type: console
@@ -80,45 +80,3 @@ map_data("state") %>%
   scale_fill_viridis() + # you can change the fill scale for different color schemes.
   labs(title = "Cumulative People Vaccinated per 100 population\nMarch 13, 2021")
 ```
-
-```{r}
-library(plotly)
-(vaccine_data %>% 
-  group_by(Region, Date) %>%
-  summarize(people_vacc_total = sum(people_vaccinated_per100)) %>%
-  ggplot(mapping = aes(x = Date, y = people_vacc_total, color = Region)) + 
-  geom_point() +
-    geom_line()+
-    labs(title = "Cumulative People Vaccinated per 100 population", 
-         y = "People/100 Population", 
-         x = "Date")) %>%
-  ggplotly()
-```
-
-
-```{r}
-library(leaflet)
-airbnb.df <- read_csv("Data/airbnbData_full.csv")
-Encoding( x = airbnb.df$AboutListing ) <- "UTF-8"
-airbnb.df$AboutListing <-
-  iconv( x = airbnb.df$AboutListing
-         , from = "UTF-8"
-         , to = "UTF-8"
-         , sub = "" )
-
-# This part makes the map!
-leaflet() %>%
-    addTiles() %>% 
-    setView(lng = mean(airbnb.df$Long), lat = mean(airbnb.df$Lat), 
-            zoom = 13) %>% 
-    addCircleMarkers(data = airbnb.df,
-        lat = ~ Lat, 
-        lng = ~ Long, 
-        popup = ~ AboutListing, 
-        radius = ~ S_Accomodates,  # These last options describe how the circles look
-        weight = 2,
-        color = "red", 
-        fillColor = "yellow")
-```
-
-
