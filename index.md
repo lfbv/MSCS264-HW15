@@ -61,3 +61,60 @@ Now I’m making a change from GitHub!!!
     account. So that I can check, make your repository private (good
     practice when doing HW), but add me (username = lfbv) as a
     collaborator under Settings &gt; Collaborators.
+
+## Map example
+
+    vaccine_data <- read_csv("Data/exam1data.csv") 
+
+    ## 
+    ## ── Column specification ────────────────────────────────────────────────────────
+    ## cols(
+    ##   State = col_character(),
+    ##   Date = col_date(format = ""),
+    ##   people_vaccinated = col_double(),
+    ##   total_distributed = col_double(),
+    ##   share_doses_used = col_double(),
+    ##   people_vaccinated_per100 = col_double(),
+    ##   Governor = col_character(),
+    ##   Region = col_character(),
+    ##   month0 = col_double(),
+    ##   day0 = col_double(),
+    ##   year0 = col_double(),
+    ##   est_population = col_double(),
+    ##   dist_per_person = col_double(),
+    ##   prev_day = col_double(),
+    ##   daily_vaccinated = col_double()
+    ## )
+
+    vacc_mar13 <- vaccine_data %>%
+      filter(Date =="2021-03-13") %>%
+      select(State, Date, people_vaccinated_per100, share_doses_used, Governor) %>%
+      mutate(State = str_replace(State, " State", ""),
+             State = str_to_lower(State))
+
+
+    library(viridis) # for color schemes
+
+    ## Loading required package: viridisLite
+
+    library(maps)
+
+    ## 
+    ## Attaching package: 'maps'
+
+    ## The following object is masked from 'package:purrr':
+    ## 
+    ##     map
+
+    map_data("state") %>%
+      left_join(vacc_mar13, by =c("region" = "State")) %>%
+      ggplot(mapping = aes(x = long, y = lat,
+                              group = group)) + 
+      geom_polygon(aes(fill = people_vaccinated_per100), color = "black") + 
+      labs(fill = "People Vacc.\nper 100 pop.") +
+      coord_map() + # This scales the longitude and latitude so that the shapes look correct.
+      theme_void() + # This theme can give you a really clean look! 
+      scale_fill_viridis() + # you can change the fill scale for different color schemes.
+      labs(title = "Cumulative People Vaccinated per 100 population\nMarch 13, 2021")
+
+![](index_files/figure-markdown_strict/unnamed-chunk-2-1.png)

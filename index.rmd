@@ -45,3 +45,31 @@ Now I'm making a change from GitHub!!!
 3. Identify which films of the top 50 from 2018 had the biggest discrepancy between reviewers (metascore) and viewers (star rating).
 
 4. 5 points if you push your Rmd file with HW15 solutions along with the knitted pdf file to your MSCS264-HW15 repository in your GitHub account.  So that I can check, make your repository private (good practice when doing HW), but add me (username = lfbv) as a collaborator under Settings > Collaborators.
+
+
+## Map example
+
+```{r}
+vaccine_data <- read_csv("Data/exam1data.csv") 
+
+vacc_mar13 <- vaccine_data %>%
+  filter(Date =="2021-03-13") %>%
+  select(State, Date, people_vaccinated_per100, share_doses_used, Governor) %>%
+  mutate(State = str_replace(State, " State", ""),
+         State = str_to_lower(State))
+
+
+library(viridis) # for color schemes
+
+library(maps)
+map_data("state") %>%
+  left_join(vacc_mar13, by =c("region" = "State")) %>%
+  ggplot(mapping = aes(x = long, y = lat,
+                          group = group)) + 
+  geom_polygon(aes(fill = people_vaccinated_per100), color = "black") + 
+  labs(fill = "People Vacc.\nper 100 pop.") +
+  coord_map() + # This scales the longitude and latitude so that the shapes look correct.
+  theme_void() + # This theme can give you a really clean look! 
+  scale_fill_viridis() + # you can change the fill scale for different color schemes.
+  labs(title = "Cumulative People Vaccinated per 100 population\nMarch 13, 2021")
+```
