@@ -51,4 +51,4 @@ Now I'm making a change from GitHub!!!
 
 3. Identify which films of the top 50 from 2018 had the biggest discrepancy between reviewers (metascore) and viewers (star rating).
 
-4. 5 points if you push your Rmd file with HW15 solutions along with the knitted pdf file to your MSCS264-HW15 repository in your GitHub account.  So that I can check, make your repository private (good practice when doing HW), but add me (username = proback) as a collaborator under Settings > Collaborators.
+4. 5 points if you push your Rmd file with HW15 solutions along with the knitted pdf file to your MSCS264-HW15 repository in your GitHub account.  So that I can check, make your repository private (good practice when doing HW), but add me (username = lfbv) as a collaborator under Settings > Collaborators.
